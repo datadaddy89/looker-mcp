@@ -41,7 +41,32 @@ Enable Python code interpreter for:
 
 ## Deployment Options
 
-This server supports **two deployment modes** depending on your use case:
+This server supports **three deployment modes** depending on your use case:
+
+### 🌐 **Remote MCP Mode** - For Claude Web App (NEW! ⭐)
+
+**Use Case**: Connect to Claude's web interface with custom connector
+- ✅ Works with **Claude Web** (claude.ai) - No desktop app needed!
+- ✅ Native MCP protocol support
+- ✅ Team/organization sharing
+- ✅ Runs on Google Cloud Run
+- ✅ Currently in Beta
+
+**Transport**: HTTP Streamable (Remote MCP)
+
+📖 **Setup Guide**: [CLAUDE_WEB_REMOTE_MCP.md](CLAUDE_WEB_REMOTE_MCP.md)
+
+**Quick Start**:
+```bash
+# 1. Deploy to Cloud Run
+./deploy.sh
+
+# 2. In Claude web: Settings → Connectors → Add custom connector
+# 3. Enter: https://your-service-url.run.app/mcp
+# 4. Start querying!
+```
+
+---
 
 ### 🖥️ **Stdio Mode** - For Claude Desktop, Cursor, etc. (Recommended for Personal Use)
 
@@ -88,10 +113,11 @@ pip install -r requirements.txt
 ---
 
 **🎯 Which mode should I use?**
-- **Personal use with Claude Desktop/Cursor**: Use **stdio mode** → [Setup Guide](CLAUDE_DESKTOP_SETUP.md)
-- **Team/production deployment**: Use **HTTP mode** on Cloud Run → [Deployment Guide](CLOUD_RUN_DEPLOYMENT.md)
-- **ChatGPT Custom GPT**: Use **HTTP mode** and create a Custom GPT → [ChatGPT Setup Guide](CHATGPT_SETUP.md)
-- **Both**: You can use stdio locally for testing and HTTP for production!
+- **Claude Web App**: Use **Remote MCP mode** → [Setup Guide](CLAUDE_WEB_REMOTE_MCP.md) ⭐ RECOMMENDED
+- **Claude Desktop/Cursor**: Use **stdio mode** → [Setup Guide](CLAUDE_DESKTOP_SETUP.md)
+- **Custom web apps/APIs**: Use **HTTP mode** → [Deployment Guide](CLOUD_RUN_DEPLOYMENT.md)
+- **ChatGPT Custom GPT**: Use **HTTP mode** + Custom GPT → [ChatGPT Setup Guide](CHATGPT_SETUP.md)
+- **All of the above**: Deploy once, use everywhere! 🚀
 
 ## Prerequisites
 

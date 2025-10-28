@@ -17,6 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY looker_conversational_analytics_mcp.py .
+COPY remote_mcp_server.py .
 COPY server.py .
 COPY .env.example .
 
@@ -31,5 +32,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD python -c "import httpx; httpx.get('http://localhost:8080/health', timeout=5.0)"
 
-# Run the HTTP server wrapper
-CMD ["python", "server.py"]
+# Run the Remote MCP server (supports Claude web + legacy HTTP API)
+CMD ["python", "remote_mcp_server.py"]
