@@ -247,6 +247,132 @@ async def list_tools():
     }
 
 
+@app.get("/openapi.json")
+async def get_openapi_schema(request: Request):
+    """Return OpenAPI schema for ChatGPT Custom GPT integration."""
+    base_url = str(request.base_url).rstrip('/')
+
+    return {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "Looker Conversational Analytics API",
+            "description": "Query Looker data using natural language via Google's Conversational Analytics API",
+            "version": "1.0.0"
+        },
+        "servers": [
+            {
+                "url": base_url,
+                "description": "Looker MCP Cloud Server"
+            }
+        ],
+        "paths": {
+            "/query": {
+                "post": {
+                    "operationId": "queryLooker",
+                    "summary": "Query Looker data with natural language",
+                    "description": "Ask natural language questions about Looker data. The API will automatically generate SQL, execute queries, and provide insights.",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": ["user_query_with_context", "explore_references"],
+                                    "properties": {
+                                        "user_query_with_context": {
+                                            "type": "string",
+                                            "description": "Natural language question about the data",
+                                            "example": "What are the top 10 products by revenue this quarter?"
+                                        },
+                                        "explore_references": {
+                                            "type": "array",
+                                            "description": "List of Looker explores to query (1-5)",
+                                            "items": {
+                                                "type": "object",
+                                                "required": ["model", "explore"],
+                                                "properties": {
+                                                    "model": {
+                                                        "type": "string",
+                                                        "description": "LookML model name",
+                                                        "example": "ecommerce"
+                                                    },
+                                                    "explore": {
+                                                        "type": "string",
+                                                        "description": "Explore name within the model",
+                                                        "example": "order_items"
+                                                    }
+                                                }
+                                            },
+                                            "minItems": 1,
+                                            "maxItems": 5
+                                        },
+                                        "system_instruction": {
+                                            "type": "string",
+                                            "description": "Additional context or instructions for the AI agent",
+                                            "default": "Help analyze the data and provide clear, actionable insights."
+                                        },
+                                        "enable_python_analysis": {
+                                            "type": "boolean",
+                                            "description": "Enable advanced Python code interpreter for complex calculations",
+                                            "default": False
+                                        },
+                                        "response_format": {
+                                            "type": "string",
+                                            "enum": ["markdown", "json"],
+                                            "description": "Output format preference",
+                                            "default": "markdown"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Successful query response",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "result": {
+                                                "type": "string",
+                                                "description": "Formatted query results"
+                                            },
+                                            "format": {
+                                                "type": "string",
+                                                "description": "Response format used"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "400": {
+                            "description": "Invalid request parameters"
+                        },
+                        "500": {
+                            "description": "Server error"
+                        }
+                    }
+                }
+            },
+            "/tools": {
+                "get": {
+                    "operationId": "listTools",
+                    "summary": "List available tools",
+                    "description": "Get information about available Looker query tools",
+                    "responses": {
+                        "200": {
+                            "description": "List of available tools"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8080))
     logger.info(f"Starting Looker MCP Cloud Server on port {port}")
