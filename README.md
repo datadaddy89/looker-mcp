@@ -41,24 +41,56 @@ Enable Python code interpreter for:
 
 ## Deployment Options
 
-### ☁️ Google Cloud Run (Production)
-Deploy as a scalable HTTP service on Google Cloud Run for production use. Perfect for:
-- Team/organization-wide access
-- Integration with web applications
-- Serverless, auto-scaling infrastructure
-- Pay-per-use pricing
+This server supports **two deployment modes** depending on your use case:
+
+### 🖥️ **Stdio Mode** - For Claude Desktop, Cursor, etc. (Recommended for Personal Use)
+
+**Use Case**: Direct integration with desktop AI assistants
+- ✅ Works with Claude Desktop, Cursor, and other MCP-compatible tools
+- ✅ Runs locally on your machine
+- ✅ Simple setup with configuration file
+- ✅ Perfect for personal use and development
+
+**Transport**: stdio (stdin/stdout communication)
+
+📖 **Setup Guide**: [CLAUDE_DESKTOP_SETUP.md](CLAUDE_DESKTOP_SETUP.md)
+
+**Quick Start**:
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure Claude Desktop
+# Edit ~/Library/Application Support/Claude/claude_desktop_config.json
+# See CLAUDE_DESKTOP_SETUP.md for complete instructions
+```
+
+---
+
+### ☁️ **HTTP Mode** - For Google Cloud Run (Recommended for Teams/Production)
+
+**Use Case**: Web service deployment for organization-wide access
+- ✅ Scalable HTTP/REST API
+- ✅ Team/organization access
+- ✅ Integration with web applications
+- ✅ Serverless, auto-scaling infrastructure
+- ✅ Pay-per-use pricing
+
+**Transport**: HTTP (RESTful endpoints)
+
+📖 **Deployment Guide**: [CLOUD_RUN_DEPLOYMENT.md](CLOUD_RUN_DEPLOYMENT.md)
 
 **Quick Deploy**:
 ```bash
 ./deploy.sh  # or deploy.ps1 for Windows
 ```
 
-📖 **Full Guide**: See [CLOUD_RUN_DEPLOYMENT.md](CLOUD_RUN_DEPLOYMENT.md) for detailed instructions.
+---
 
-### 💻 Local/Desktop (Development)
-Run locally for development and testing with Claude Desktop or other MCP clients.
-
-**Quick Start**: See [Installation](#installation) section below.
+**🎯 Which mode should I use?**
+- **Personal use with Claude Desktop/Cursor**: Use **stdio mode** → [Setup Guide](CLAUDE_DESKTOP_SETUP.md)
+- **Team/production deployment**: Use **HTTP mode** on Cloud Run → [Deployment Guide](CLOUD_RUN_DEPLOYMENT.md)
+- **Both**: You can use stdio locally for testing and HTTP for production!
 
 ## Prerequisites
 
