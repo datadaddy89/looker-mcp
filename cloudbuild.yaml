@@ -1,0 +1,71 @@
+# Cloud Build configuration for Looker MCP Server
+# This file defines the build and deployment process for Google Cloud Run
+
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:$COMMIT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:latest'
+      - '.'
+
+  # Push the container image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:$COMMIT_SHA'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:latest'
+
+  # Deploy container image to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'looker-mcp-server'
+      - '--image'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars'
+      - 'LOOKER_BASE_URL=${_LOOKER_BASE_URL},LOOKER_VERIFY_SSL=${_LOOKER_VERIFY_SSL},GOOGLE_CLOUD_PROJECT=$PROJECT_ID'
+      - '--set-secrets'
+      - 'LOOKER_CLIENT_ID=looker-client-id:latest,LOOKER_CLIENT_SECRET=looker-client-secret:latest'
+      - '--memory'
+      - '2Gi'
+      - '--cpu'
+      - '2'
+      - '--timeout'
+      - '300s'
+      - '--max-instances'
+      - '10'
+      - '--min-instances'
+      - '0'
+
+# Substitutions for environment variables
+substitutions:
+  _LOOKER_BASE_URL: 'https://labelboxdata.cloud.looker.com'
+  _LOOKER_VERIFY_SSL: 'false'
+
+# Build options
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'N1_HIGHCPU_8'
+
+# Build timeout
+timeout: '1200s'
+
+# Images to store in Artifact Registry
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/looker-mcp/looker-mcp-server:latest'

@@ -1,0 +1,18 @@
+# Looker Conversational Analytics MCP Server Dependencies
+
+# MCP Framework
+mcp>=1.0.0
+
+# Google Cloud and Conversational Analytics
+google-cloud-geminidataanalytics>=0.1.0
+google-auth>=2.0.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Async HTTP (if needed for additional Looker API calls)
+httpx>=0.25.0
+
+# FastAPI and server dependencies for Cloud Run
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
