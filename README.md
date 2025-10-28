@@ -90,6 +90,7 @@ pip install -r requirements.txt
 **🎯 Which mode should I use?**
 - **Personal use with Claude Desktop/Cursor**: Use **stdio mode** → [Setup Guide](CLAUDE_DESKTOP_SETUP.md)
 - **Team/production deployment**: Use **HTTP mode** on Cloud Run → [Deployment Guide](CLOUD_RUN_DEPLOYMENT.md)
+- **ChatGPT Custom GPT**: Use **HTTP mode** and create a Custom GPT → [ChatGPT Setup Guide](CHATGPT_SETUP.md)
 - **Both**: You can use stdio locally for testing and HTTP for production!
 
 ## Prerequisites
